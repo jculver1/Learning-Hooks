@@ -13,7 +13,7 @@ function appReducer(state, action) {
       ]
     }
     default:
-    break;
+    return state
   }
 }
 
@@ -23,12 +23,16 @@ export default function ToDoList(){
     <div>
       <h1>Things todo</h1>
       <button onClick={()=> dispatch({type: 'add'})}>Add Item</button>
-      {state.map(item => (
-        <div key={item.id}>{item.id}</div>
-      ))}
+      <TodosList items={state}/>
     </div>
   )
+  function TodoItem({ id }){
+    return <div>{id}</div>
+  }
+
+  function TodosList({items}){
+    return items.map(item => <TodoItem key={item.id} {...item}/>)   
+  }
+
+
 }
-
-
-
