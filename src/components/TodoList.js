@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from 'react';
+import React, { useReducer, useContext, useEffect, useRef} from 'react';
 
 function appReducer(state, action) {
   switch(action.type){
@@ -11,6 +11,9 @@ function appReducer(state, action) {
           completed: false,
         }
       ]
+    }
+    case 'reset':{
+      return action.payload
     }
     case 'delete':{
       return state.filter(item => item.id !== action.payload) 
@@ -33,8 +36,30 @@ function appReducer(state, action) {
 
 const Context = React.createContext()
 
+function useEffectOnce(cb){
+  const didRun = useRef(false)
+
+  useEffect(() => {
+    if(!didRun.current){
+      cb()
+      didRun.current = true 
+    }
+  })
+}
+
 export default function ToDoList(){
   const [state, dispatch] = useReducer(appReducer, [])
+
+  useEffectOnce(() => {
+    const raw = localStorage.getItem('data')
+    dispatch({type: 'reset', payload: JSON.parse(raw)}) 
+  })
+
+  useEffect(() => {
+    localStorage.setItem('data', JSON.stringify(state))
+  }, [state]
+  )
+
   return(
     <Context.Provider value={dispatch}>
       <h1>Things todo</h1>
