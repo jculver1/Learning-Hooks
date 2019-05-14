@@ -1,5 +1,4 @@
 import React from 'react';
-import Count from './components/Count'
 import TodoList from './components/TodoList'
 import './App.css';
 
